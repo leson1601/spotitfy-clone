@@ -1,0 +1,38 @@
+import { IArtist } from "../artist";
+import { IGenre } from "../genre";
+import { ISong } from "../song";
+
+export type IAlbumDetail = {
+  PR: boolean;
+  aliasTitle: string;
+  artist: IArtist;
+  artists: IArtist[];
+  artistsNames: string;
+  contentLastUpdate: number;
+  description: string;
+  encodeId: string;
+  genreIds: string[];
+  genres: IGenre[];
+  isAlbum: boolean;
+  isIndie: boolean;
+  isPrivate: boolean;
+  isShuffle: boolean;
+  isSingle: boolean;
+  isoffical: boolean;
+  like: number;
+  liked: boolean;
+  link: string;
+  listen: number;
+  playItemMode: number;
+  releaseDate: string;
+  sectionId: string;
+  song: { items: ISong[], total: number, totalDuration: number; };
+  sortDescription: string;
+  subType: number;
+  textType: string;
+  thumbnail: string;
+  thumbnailM: string;
+  title: string;
+  uid: number;
+  userName: string;
+};

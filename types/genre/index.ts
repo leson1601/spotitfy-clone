@@ -1,0 +1,1 @@
+export type IGenre = { id: string, name: string, title: string, alias: string, link: string; };
