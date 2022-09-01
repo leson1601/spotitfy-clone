@@ -1,7 +1,6 @@
 import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { RootStackScreenProps } from '../types';
+import {  RootTabScreenProps } from '../types';
 import axios from 'axios';
 import { BASE_URL } from "@env";
 import { IAlbumDetail } from '../types/index';
@@ -9,13 +8,18 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Song from '../components/Song';
-const PlaylistScreen = ({ route, navigation }: RootStackScreenProps<'Playlist'>) => {
+const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) => {
   const [album, setAlbum] = useState<IAlbumDetail>();
   const { item } = route.params;
   useEffect(() => {
-    axios.get(`${BASE_URL}/detailplaylist?id=${item.encodeId}`).then(response => {
-      setAlbum(response.data.data);
-    });
+    try {
+      
+      axios.get(`${BASE_URL}/detailplaylist?id=${item.encodeId}`).then(response => {
+        setAlbum(response.data.data);
+      });
+    } catch (err) {
+      console.log(err)
+    }
   }, []);
   return (
     <View style={styles.container}>
@@ -70,7 +74,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10
+    marginTop: 10,
+    maxWidth: 260,
   },
   action: {
     flexDirection: "row",

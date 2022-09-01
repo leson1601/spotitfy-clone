@@ -1,11 +1,17 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { ISong } from '../types/index';
 import { Entypo } from '@expo/vector-icons';
+import { useStore } from '../store';
 
 const Song = ({ song }: { song: ISong; }) => {
+  const handleOnPress = () => {
+    console.log("Pressed");
+    useStore.setState({ song: song });
+
+  };
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={handleOnPress} >
       <Image source={{ uri: song.thumbnail }} style={styles.cover} />
 
       <View>
@@ -17,7 +23,7 @@ const Song = ({ song }: { song: ISong; }) => {
       <View style={{ marginLeft: "auto" }}>
         <Entypo name="dots-three-horizontal" size={24} color="white" />
       </View>
-    </View>
+    </Pressable>
   );
 };
 

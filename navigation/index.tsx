@@ -41,8 +41,6 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="Playlist" component={PlaylistScreen} options={{ headerShown: false }} />
-      
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
@@ -65,6 +63,14 @@ function BottomTabNavigator() {
       initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarStyle: {
+          backgroundColor: 'rgba(0,0,0,1)',
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          elevation: 0, 
+        }
       }}>
       <BottomTab.Screen
         name="Home"
@@ -113,6 +119,10 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="bookshelf" size={20} color={color} style={{ marginBottom: -3 }} />,
         }}
       />     
+      <BottomTab.Screen name="Playlist" component={PlaylistScreen}  options={{
+        headerShown: false,
+        tabBarButton: () => null,
+      }} />
     </BottomTab.Navigator>
   );
 }
