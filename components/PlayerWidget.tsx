@@ -1,17 +1,29 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
 import { ISong } from '../types/index';
 import { Entypo } from '@expo/vector-icons';
 import { useStore } from '../store';
-import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons';
+import { BASE_URL } from "@env";
+import axios from 'axios';
 
 const PlayerWidget = () => {
-  const song = useStore((state) => state.song)
+  const song = useStore((state) => state.song);
   useEffect(() => {
-    console.log(song)
-  },[])
+    try {
+      if (song) {
+
+        axios.get(`${BASE_URL}/song?id=${song?.encodeId}`).then(response => {
+          console.log(response.data);
+         
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [song]);
   return (
-    <View style={song ? styles.container: {display:'none'}}>      
+    <View style={song ? styles.container : { display: 'none' }}>
       <Image source={{ uri: song?.thumbnail }} style={styles.cover} />
       <View>
         <Text style={styles.title} numberOfLines={1}>{song?.title}</Text>
@@ -23,23 +35,23 @@ const PlayerWidget = () => {
         <FontAwesome name="play" size={24} color="white" />
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default PlayerWidget
+export default PlayerWidget;
 
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 49,  
-    left: 0,  
+    bottom: 49,
+    left: 0,
     right: 0,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "gray",
     padding: 10,
     borderRadius: 10
-   
+
   },
   cover: {
     width: 38,

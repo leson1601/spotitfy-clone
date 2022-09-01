@@ -6,7 +6,6 @@ import { useStore } from '../store';
 
 const Song = ({ song }: { song: ISong; }) => {
   const handleOnPress = () => {
-    console.log("Pressed");
     useStore.setState({ song: song });
 
   };
