@@ -24,14 +24,14 @@ const PlayerWidget = () => {
 
       if (song) {
         axios.get(`${BASE_URL}/song?id=${song?.encodeId}`).then(async (response) => {
-         
-          if (response.data.data && response.data.data[128]) {            
+
+          if (response.data.data && response.data.data[128]) {
             const audioURI = response.data.data[128];
             console.log(audioURI);
             console.log("Loading Song");
             // const sound = new Audio.Sound();
             // await sound.loadAsync({ uri: audioURI })
-            
+
             const { sound } = await Audio.Sound.createAsync(
               { uri: audioURI }
             );
@@ -40,7 +40,7 @@ const PlayerWidget = () => {
             await sound.playAsync();
             setIsPlaying(true);
           } else {
-            console.log(response.data)
+            console.log(response.data);
           }
         });
       }
@@ -77,7 +77,7 @@ const PlayerWidget = () => {
           <Text style={styles.artist} numberOfLines={1}>{song?.artistsNames}</Text>
         </View>
       </View>
-      <Pressable style={{ marginLeft: "auto", paddingHorizontal: 20, height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "red" }} onPress={handleOnPress}>
+      <Pressable style={styles.playButton} onPress={handleOnPress}>
         <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
       </Pressable>
     </View>
@@ -115,5 +115,13 @@ const styles = StyleSheet.create({
     color: "#B3B3B3",
     fontSize: 13,
     fontWeight: "500"
+  },
+  playButton: {
+    marginLeft: "auto",
+    paddingHorizontal: 20,
+    height: "100%",
+    justifyContent: 'center',
+    alignItems: "center",
+    backgroundColor: "red"
   }
 });
