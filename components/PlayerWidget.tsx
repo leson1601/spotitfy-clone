@@ -24,18 +24,24 @@ const PlayerWidget = () => {
 
       if (song) {
         axios.get(`${BASE_URL}/song?id=${song?.encodeId}`).then(async (response) => {
-          const audioURI = response.data.data[128];
-          console.log(audioURI);
-          console.log("Loading Song");
-          // const sound = new Audio.Sound();
-          // await sound.loadAsync({ uri: audioURI })
-          const { sound } = await Audio.Sound.createAsync(
-            { uri: audioURI }
-          );
-          setSound(sound);
-          console.log("Loaded Song");
-          await sound.playAsync();
-          setIsPlaying(true);
+         
+          if (response.data.data && response.data.data[128]) {            
+            const audioURI = response.data.data[128];
+            console.log(audioURI);
+            console.log("Loading Song");
+            // const sound = new Audio.Sound();
+            // await sound.loadAsync({ uri: audioURI })
+            
+            const { sound } = await Audio.Sound.createAsync(
+              { uri: audioURI }
+            );
+            setSound(sound);
+            console.log("Loaded Song");
+            await sound.playAsync();
+            setIsPlaying(true);
+          } else {
+            console.log(response.data)
+          }
         });
       }
     } catch (error) {
