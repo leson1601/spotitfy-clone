@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
   artist: {
     color: "#B3B3B3",
     fontSize: 13,
-    fontWeight: "500"
+    fontWeight: "500",
+    maxWidth: 280
   },
   playButton: {
     marginLeft: "auto",

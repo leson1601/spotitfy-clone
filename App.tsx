@@ -6,6 +6,9 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import { RootSiblingParent } from 'react-native-root-siblings';
+import { View } from './components/Themed';
+import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 
 
 export default function App() {
@@ -18,9 +21,11 @@ export default function App() {
     return (
       <RootSiblingParent>
         <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-          <PlayerWidget />
+            <Navigation colorScheme={colorScheme} />
+
+            <PlayerWidget />
+            <StatusBar />
+
         </SafeAreaProvider>
       </RootSiblingParent>
     );
