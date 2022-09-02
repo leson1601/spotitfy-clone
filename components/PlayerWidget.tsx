@@ -6,6 +6,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { BASE_URL } from "@env";
 import axios from 'axios';
 import { Audio, AVPlaybackStatusError, AVPlaybackStatusSuccess } from 'expo-av';
+import Toast from 'react-native-root-toast'
 
 const PlayerWidget = () => {
   const song = useStore((state) => state.song);
@@ -24,7 +25,7 @@ const PlayerWidget = () => {
 
       if (song) {
         axios.get(`${BASE_URL}/song?id=${song?.encodeId}`).then(async (response) => {
-
+         
           if (response.data.data && response.data.data[128]) {
             const audioURI = response.data.data[128];
             console.log(audioURI);
@@ -41,6 +42,10 @@ const PlayerWidget = () => {
             setIsPlaying(true);
           } else {
             console.log(response.data);
+            const toast = Toast.show(response.data.msg, {
+              duration: Toast.durations.SHORT,
+              position: 0,
+            });
           }
         });
       }
