@@ -7,7 +7,6 @@ import { useStore } from '../store';
 const Song = ({ song }: { song: ISong; }) => {
   const handleOnPress = () => {
     useStore.setState({ song: song });
-
   };
   return (
     <Pressable style={styles.container} onPress={handleOnPress} >

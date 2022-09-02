@@ -1,61 +1,67 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { IAudio, ISong } from '../types/index';
-import { Entypo } from '@expo/vector-icons';
+import { IAudio } from '../types/index';
 import { useStore } from '../store';
 import { FontAwesome } from '@expo/vector-icons';
 import { BASE_URL } from "@env";
 import axios from 'axios';
-import { Audio } from 'expo-av';
+import { Audio, AVPlaybackStatusError, AVPlaybackStatusSuccess } from 'expo-av';
 
 const PlayerWidget = () => {
   const song = useStore((state) => state.song);
-  const [audioFile, setAudioFile] = useState<IAudio>();
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
-  const playSound = async () => {
-    if (sound) {
-      sound.unloadAsync();
-    }
-    if (audioFile) {      
-      console.log('Loading Sound');
-      console.log(audioFile[128])
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: audioFile[128] },
-        // { uri: 'http://websrvr90va.audiovideoweb.com/va90web25003/companions/Foundations%20of%20Rock/13.01.mp3'},
-        { shouldPlay: true }
-      );
-      console.log("Loaded Sound")
-      setSound(sound);
-  
-      console.log('Playing Sound');
-      await sound.playAsync();
-    }
-  };
+  const [sound, setSound] = React.useState<Audio.Sound>();
+  const [isPlaying, setIsPlaying] = React.useState<boolean>(false);
   useEffect(() => {
-    playSound();
-  }, [audioFile])
-  
-  // useEffect(() => {
-  //   return sound
-  //     ? () => {
-  //       console.log('Unloading Sound');
-  //       sound.unloadAsync();
-  //     }
-  //     : undefined;
-  // }, [sound]);
+    getAudio();   
+  }, [song]);
 
-  useEffect(() => {
+  const getAudio = async () => {
     try {
+      if (sound) {
+        await sound.unloadAsync();
+      }
+
       if (song) {
-        axios.get(`${BASE_URL}/song?id=${song?.encodeId}`).then(response => {          
-          setAudioFile(response.data.data)
+        axios.get(`${BASE_URL}/song?id=${song?.encodeId}`).then(async (response) => {
+          const audioURI = response.data.data[128];
+          console.log(audioURI);
+          console.log("Loading Song");
+          // const sound = new Audio.Sound();
+          // await sound.loadAsync({ uri: audioURI })
+          const { sound } = await Audio.Sound.createAsync(
+            { uri: audioURI }
+          );
+          setSound(sound);
+          console.log("Loaded Song");
+          await sound.playAsync();
+          setIsPlaying(true)
         });
       }
     } catch (error) {
       console.log(error);
     }
-  }, [song]);
+  };
+  const playAudio = async () => {
+    if (sound) {
+      console.log('Playing Sound');
+      await sound.playAsync();
+    } else {
+      console.log("no song are chosen");
+    }
+  };
+  const handleOnPress = async () => {
+    if (sound) {
+      if (isPlaying) {
+        await sound.pauseAsync();
+        setIsPlaying(false)
+      } else {
+        await sound.playAsync();
+        setIsPlaying(true)
+      }
+    }
+  };
+
   return (
     <View style={song ? styles.container : { display: 'none' }}>
       <Image source={{ uri: song?.thumbnail }} style={styles.cover} />
@@ -65,8 +71,8 @@ const PlayerWidget = () => {
           <Text style={styles.artist} numberOfLines={1}>{song?.artistsNames}</Text>
         </View>
       </View>
-      <Pressable style={{ marginLeft: "auto", marginRight: 20 }} onPress={playSound}>
-        <FontAwesome name="play" size={24} color="white" />
+      <Pressable style={{ marginLeft: "auto", paddingHorizontal: 20 }} onPress={handleOnPress}>
+        <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
       </Pressable>
     </View>
   );

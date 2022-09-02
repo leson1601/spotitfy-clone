@@ -1,6 +1,6 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { IAlbum } from '../types/Album';
+import { IAlbum } from '../types/index';
 import { useNavigation } from '@react-navigation/native';
 
 const Album = ({ item, firstOrLast }: { item: IAlbum, firstOrLast: string; }) => {

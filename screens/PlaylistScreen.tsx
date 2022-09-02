@@ -9,25 +9,30 @@ import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Song from '../components/Song';
 const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) => {
-  const [album, setAlbum] = useState<IAlbumDetail>();
+  const [album, setAlbum] = useState<IAlbumDetail|null>();
+  
   const { item } = route.params;
   useEffect(() => {
     try {
-
+      console.log(item.encodeId)
       axios.get(`${BASE_URL}/detailplaylist?id=${item.encodeId}`).then(response => {
         setAlbum(response.data.data);
       });
     } catch (err) {
       console.log(err);
     }
-  }, []);
+    return () =>{
+      setAlbum(null)
+    }
+  }, [item]);
   return (
+    
     <View style={styles.container}>
 
       <FlatList
         data={album?.song.items}
         renderItem={({ item, index }) => <Song song={item} />}
-        ListHeaderComponent={<View style={{ marginBottom: 10 }}>
+        ListHeaderComponent={<View style={{ marginBottom: 10}}>
           <View style={{ alignItems: "center" }}>
             <Image source={{ uri: album?.thumbnail }} style={styles.cover} />
           </View>
@@ -73,6 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '600',
     color: "white",
+     maxWidth: 280
 
   },
   artist: {
