@@ -13,7 +13,7 @@ const PlayerWidget = () => {
   const [sound, setSound] = React.useState<Audio.Sound>();
   const [isPlaying, setIsPlaying] = React.useState<boolean>(false);
   useEffect(() => {
-    getAudio();   
+    getAudio();
   }, [song]);
 
   const getAudio = async () => {
@@ -35,7 +35,7 @@ const PlayerWidget = () => {
           setSound(sound);
           console.log("Loaded Song");
           await sound.playAsync();
-          setIsPlaying(true)
+          setIsPlaying(true);
         });
       }
     } catch (error) {
@@ -54,10 +54,10 @@ const PlayerWidget = () => {
     if (sound) {
       if (isPlaying) {
         await sound.pauseAsync();
-        setIsPlaying(false)
+        setIsPlaying(false);
       } else {
         await sound.playAsync();
-        setIsPlaying(true)
+        setIsPlaying(true);
       }
     }
   };
@@ -71,7 +71,7 @@ const PlayerWidget = () => {
           <Text style={styles.artist} numberOfLines={1}>{song?.artistsNames}</Text>
         </View>
       </View>
-      <Pressable style={{ marginLeft: "auto", paddingHorizontal: 20 }} onPress={handleOnPress}>
+      <Pressable style={{ marginLeft: "auto", paddingHorizontal: 20, height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "red" }} onPress={handleOnPress}>
         <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
       </Pressable>
     </View>
