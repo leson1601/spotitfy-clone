@@ -49,6 +49,10 @@ function RootNavigator() {
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
 
+      <Stack.Screen name="NowPlaying" component={NowPlaying} options={{
+        headerShown: true,
+      }} />
+
     </Stack.Navigator>
   );
 }
@@ -113,10 +117,6 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen name="Playlist" component={PlaylistScreen} options={{
         headerShown: false,
-        tabBarButton: () => null,
-      }} />
-      <BottomTab.Screen name="NowPlaying" component={NowPlaying} options={{
-        headerShown: true,
         tabBarButton: () => null,
       }} />
 

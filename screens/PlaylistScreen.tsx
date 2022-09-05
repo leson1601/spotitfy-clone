@@ -31,7 +31,7 @@ const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) =
 
   useEffect(() => {
     console.log(pos)
-    if (pos >= 340) {
+    if (pos >= 460) {
       navigation.setOptions({ headerShown: true, title: album?.title });
     } else {
       navigation.setOptions({ headerShown: true, title: "Playlist" });
@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     paddingBottom: 110
   },
   cover: {
-    width: 230,
-    height: 230,
+    width: 300,
+    aspectRatio: 1
   },
   title: {
     fontSize: 25,

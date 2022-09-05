@@ -1,6 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { IAudio } from '../types/index';
 import { useStore } from '../store';
 import { FontAwesome } from '@expo/vector-icons';
 import { BASE_URL } from "@env";
