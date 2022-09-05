@@ -2,7 +2,6 @@ import { FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from "@env";
 import { Text, View } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
 import { useEffect, useState } from 'react';
 import { IPlaylist } from '../types/index';
 import Playlist from '../components/Playlist';
