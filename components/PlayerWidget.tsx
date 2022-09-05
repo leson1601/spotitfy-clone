@@ -5,7 +5,7 @@ import { useStore } from '../store';
 import { FontAwesome } from '@expo/vector-icons';
 import { BASE_URL } from "@env";
 import axios from 'axios';
-import { Audio, AVPlaybackStatus, AVPlaybackStatusError, AVPlaybackStatusSuccess } from 'expo-av';
+import { Audio, AVPlaybackStatus } from 'expo-av';
 import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
 
@@ -16,13 +16,15 @@ const PlayerWidget = () => {
   const [sound, setSound] = React.useState<Audio.Sound>();
   const [isPlaying, setIsPlaying] = React.useState<boolean>(false);
   useEffect(() => {
+    setPorgressProcent(0);
     getAudio();
   }, [song]);
 
+
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     console.log(status);
-    if('isPlaying' in status) {
-      setIsPlaying(status.isPlaying)
+    if ('isPlaying' in status) {
+      setIsPlaying(status.isPlaying);
     }
     if (("positionMillis" in status) && ('durationMillis' in status)) {
       if (status.durationMillis) {
@@ -38,7 +40,12 @@ const PlayerWidget = () => {
     try {
 
       if (song) {
+        const loadingToast = Toast.show("Loading", {
+          duration: 10000,
+          position: -56
+        });
         axios.get(`${BASE_URL}/song?id=${song?.encodeId}`).then(async (response) => {
+          
           if (response.data.data && response.data.data[128]) {
             const audioURI = response.data.data[128];
             console.log(audioURI);
@@ -49,8 +56,10 @@ const PlayerWidget = () => {
               { shouldPlay: true },
               onPlaybackStatusUpdate
             );
+
             setSound(sound);
             console.log("Loaded Song");
+
             await sound.playAsync();
             setIsPlaying(true);
           } else {
@@ -60,7 +69,9 @@ const PlayerWidget = () => {
               position: 0,
             });
           }
+          Toast.hide(loadingToast)
         });
+       
       }
     } catch (error) {
       console.log(error);
@@ -69,6 +80,7 @@ const PlayerWidget = () => {
 
 
   const handleOnPress = async () => {
+
     if (sound) {
       if (isPlaying) {
         await sound.pauseAsync();
