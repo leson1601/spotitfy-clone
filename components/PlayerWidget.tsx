@@ -8,9 +8,12 @@ import axios from 'axios';
 import { Audio, AVPlaybackStatus } from 'expo-av';
 import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
+import { useNavigation } from '@react-navigation/native';
 
 const PlayerWidget = () => {
-  const song = useStore((state) => state.song);
+  const navigation = useNavigation();
+  const playlist = useStore((state) => state.playlist);
+  const song = playlist ? playlist[0] : null;
   const [progressProcent, setPorgressProcent] = useState<number>(0);
 
   const [sound, setSound] = React.useState<Audio.Sound>();
@@ -22,7 +25,6 @@ const PlayerWidget = () => {
 
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
-    console.log(status);
     if ('isPlaying' in status) {
       setIsPlaying(status.isPlaying);
     }
@@ -38,18 +40,16 @@ const PlayerWidget = () => {
       await sound.unloadAsync();
     }
     try {
-
       if (song) {
         const loadingToast = Toast.show("Loading", {
           duration: 10000,
           position: -56
         });
         axios.get(`${BASE_URL}/song?id=${song?.encodeId}`).then(async (response) => {
-          
+
           if (response.data.data && response.data.data[128]) {
             const audioURI = response.data.data[128];
             console.log(audioURI);
-            console.log("Loading Song");
 
             const { sound } = await Audio.Sound.createAsync(
               { uri: audioURI },
@@ -58,29 +58,28 @@ const PlayerWidget = () => {
             );
 
             setSound(sound);
-            console.log("Loaded Song");
 
             await sound.playAsync();
             setIsPlaying(true);
           } else {
-            console.log(response.data);
             const toast = Toast.show(response.data.msg, {
               duration: Toast.durations.SHORT,
               position: 0,
             });
           }
-          Toast.hide(loadingToast)
+          Toast.hide(loadingToast);
         });
-       
+
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-
-  const handleOnPress = async () => {
-
+  const onContainerPress = () => {
+    navigation.navigate("NowPlaying");
+  };
+  const onPlayPausePress = async () => {
     if (sound) {
       if (isPlaying) {
         await sound.pauseAsync();
@@ -93,7 +92,7 @@ const PlayerWidget = () => {
   };
 
   return (
-    <View style={song ? styles.container : { display: 'none' }}>
+    <Pressable style={song ? styles.container : { display: 'none' }} onPress={onContainerPress}>
       <View style={styles.topContainer}>
         <Image source={{ uri: song?.thumbnail }} style={styles.cover} />
         <View>
@@ -102,16 +101,15 @@ const PlayerWidget = () => {
             <Text style={styles.artist} numberOfLines={1}>{song?.artistsNames}</Text>
           </View>
         </View>
-        <Pressable style={styles.playButton} onPress={handleOnPress}>
+        <Pressable style={styles.playButton} onPress={onPlayPausePress}>
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
         </Pressable>
       </View>
       <ProgressBar procent={progressProcent} />
 
-    </View>
+    </Pressable>
   );
 };
-
 export default PlayerWidget;
 
 const styles = StyleSheet.create({

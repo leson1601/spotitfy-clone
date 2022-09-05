@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { RootTabScreenProps } from '../types';
 import axios from 'axios';
@@ -8,31 +8,50 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Song from '../components/Song';
+import { useStore } from '../store';
 const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) => {
-  const [album, setAlbum] = useState<IAlbumDetail|null>();
-  
+  const [album, setAlbum] = useState<IAlbumDetail | null>();
+  const [pos, setPos] = React.useState(0);
   const { item } = route.params;
   useEffect(() => {
+  },[]) 
+
+  useEffect(() => {
     try {
-      console.log(item.encodeId)
       axios.get(`${BASE_URL}/detailplaylist?id=${item.encodeId}`).then(response => {
         setAlbum(response.data.data);
       });
     } catch (err) {
       console.log(err);
     }
-    return () =>{
-      setAlbum(null)
-    }
+    return () => {
+      setAlbum(null);
+    };
   }, [item]);
-  return (
-    
-    <View style={styles.container}>
 
-      <FlatList
+  useEffect(() => {
+    console.log(pos)
+    if (pos >= 340) {
+      navigation.setOptions({ headerShown: true, title: album?.title });
+    } else {
+      navigation.setOptions({ headerShown: true, title: "Playlist" });
+    }
+  },[pos])
+
+  const onPlayPausePress = () => {
+    console.log("Press");
+    if (album) {
+      useStore.setState({ playlist: album.song.items });
+    }
+  };
+  return (
+
+    <View style={styles.container}>
+      {album ? <FlatList
+        onScroll={(e) => setPos(e.nativeEvent.contentOffset.y)}
         data={album?.song.items}
-        renderItem={({ item, index }) => <Song song={item} />}
-        ListHeaderComponent={<View style={{ marginBottom: 10}}>
+        renderItem={({ item, index }) => <Song song={item} playlist={album?.song.items} />}
+        ListHeaderComponent={<View style={{ marginBottom: 10, marginTop: 40 }}>
           <View style={{ alignItems: "center" }}>
             <Image source={{ uri: album?.thumbnail }} style={styles.cover} />
           </View>
@@ -50,12 +69,18 @@ const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) =
 
               </View>
             </View>
-            <View>
-              <Ionicons name="pause-circle-sharp" size={56} color="white" />
-            </View>
+            <Pressable onPress={onPlayPausePress} >
+
+              {/* <Ionicons name="pause-circle-sharp" size={56} color="white" /> */}
+              <Ionicons name="play" size={56} color="white" onPre />
+            </Pressable>
+
+
           </View>
         </View>}
-      />
+      /> : <Text style={{ color: "white", width: "100%", textAlign: "center", fontSize: 20, fontWeight: '700' }}>Loading...</Text>}
+
+
     </View>
   );
 };
@@ -66,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    paddingTop: 50,
+
     paddingHorizontal: 20,
     paddingBottom: 110
   },
@@ -78,7 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '600',
     color: "white",
-     maxWidth: 280
+    maxWidth: 280
 
   },
   artist: {

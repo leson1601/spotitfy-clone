@@ -4,9 +4,14 @@ import { ISong } from '../types/index';
 import { Entypo } from '@expo/vector-icons';
 import { useStore } from '../store';
 
-const Song = ({ song }: { song: ISong; }) => {
+const Song = ({ song, playlist }: { song: ISong, playlist: ISong[]}) => {
+  
   const handleOnPress = () => {
-    useStore.setState({ song: song });
+    const index = playlist.indexOf(song)
+    const tailPlaylist = playlist.slice(0, index)
+    const headPlaylist = playlist.slice(index)
+    const newPlaylist = headPlaylist.concat(tailPlaylist)    
+    useStore.setState({ playlist: newPlaylist});
   };
   return (
     <Pressable style={styles.container} onPress={handleOnPress} >

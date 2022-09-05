@@ -20,6 +20,8 @@ import LibraryScreen from '../screens/LibraryScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import PlaylistScreen from '../screens/PlaylistScreen';
+import NowPlaying from '../screens/NowPlaying';
+import PlayerWidget from '../components/PlayerWidget';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName; }) {
   return (
@@ -27,6 +29,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator />
+      <PlayerWidget />
     </NavigationContainer>
   );
 }
@@ -45,6 +48,7 @@ function RootNavigator() {
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
+
     </Stack.Navigator>
   );
 }
@@ -69,19 +73,19 @@ function BottomTabNavigator() {
           left: 0,
           right: 0,
           bottom: 0,
-          elevation: 0, 
+          elevation: 0,
         }
       }}>
       <BottomTab.Screen
         name="Home"
         component={HomeScreen}
-        options={({ navigation }: RootTabScreenProps<'Home'>) => ({         
+        options={({ navigation }: RootTabScreenProps<'Home'>) => ({
           headerShown: false,
           tabBarLabelStyle: {
             marginBottom: 4
           },
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          
+
         })}
       />
       <BottomTab.Screen
@@ -106,12 +110,16 @@ function BottomTabNavigator() {
           },
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="bookshelf" size={20} color={color} style={{ marginBottom: -3 }} />,
         }}
-      />     
-      <BottomTab.Screen name="Playlist" component={PlaylistScreen}  options={{
+      />
+      <BottomTab.Screen name="Playlist" component={PlaylistScreen} options={{
+        headerShown: false,
+        tabBarButton: () => null,
+      }} />
+      <BottomTab.Screen name="NowPlaying" component={NowPlaying} options={{
         headerShown: true,
         tabBarButton: () => null,
-       
       }} />
+
     </BottomTab.Navigator>
   );
 }
