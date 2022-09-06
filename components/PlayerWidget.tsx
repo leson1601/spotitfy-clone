@@ -14,14 +14,21 @@ const PlayerWidget = () => {
   const playlist = useStore((state) => state.playlist);
   const song = playlist ? playlist[0] : null;
   const [progressProcent, setPorgressProcent] = useState<number>(0);
-
-  const [sound, setSound] = React.useState<Audio.Sound>();
-  const [isPlaying, setIsPlaying] = React.useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [sound, setSound] = useState<Audio.Sound>();
   useEffect(() => {
     setPorgressProcent(0);
     getAudio();
   }, [song]);
-
+  
+  useEffect(() => {
+    return sound
+      ? () => {
+        console.log('Unloading Sound');
+        sound.unloadAsync();
+      }
+      : undefined;
+  }, [sound]);
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     if ('isPlaying' in status) {
@@ -36,6 +43,7 @@ const PlayerWidget = () => {
 
   const getAudio = async () => {
     if (sound) {
+      console.log(sound);
       await sound.unloadAsync();
     }
     try {
@@ -55,9 +63,7 @@ const PlayerWidget = () => {
               { shouldPlay: true },
               onPlaybackStatusUpdate
             );
-
             setSound(sound);
-
             await sound.playAsync();
             setIsPlaying(true);
           } else {

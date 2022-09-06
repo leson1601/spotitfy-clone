@@ -30,7 +30,6 @@ const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) =
   }, [item]);
 
   useEffect(() => {
-    console.log(pos)
     if (pos >= 460) {
       navigation.setOptions({ headerShown: true, title: album?.title });
     } else {
@@ -53,7 +52,7 @@ const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) =
         renderItem={({ item, index }) => <Song song={item} playlist={album?.song.items} />}
         ListHeaderComponent={<View style={{ marginBottom: 10, marginTop: 40 }}>
           <View style={{ alignItems: "center" }}>
-            <Image source={{ uri: album?.thumbnail }} style={styles.cover} />
+            <Image source={{ uri: album?.thumbnailM || album?.thumbnail }} style={styles.cover} />
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 40 }}>
             <View>
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
 
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingBottom: 110
   },
   cover: {

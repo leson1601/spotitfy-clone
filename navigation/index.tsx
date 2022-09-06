@@ -48,7 +48,6 @@ function RootNavigator() {
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
-
       <Stack.Screen name="NowPlaying" component={NowPlaying} options={{
         headerShown: true,
       }} />
