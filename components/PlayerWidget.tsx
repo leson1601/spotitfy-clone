@@ -16,8 +16,9 @@ const PlayerWidget = ({isShown}:{isShown: boolean}) => {
   const [progressProcent, setPorgressProcent] = useState<number>(0);
   // const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const isPlaying = useStore((state) => state.isPlaying);
-  const [sound, setSound] = useState<Audio.Sound>();
-  // const sound = useStore((state) => state.sound);
+  // const [sound, setSound] = useState<Audio.Sound>();
+  const sound = useStore((state) => state.sound);
+  console.log(sound?.unloadAsync)
   useEffect(() => {
     setPorgressProcent(0);
     getAudio();
@@ -47,8 +48,7 @@ const PlayerWidget = ({isShown}:{isShown: boolean}) => {
   };
 
   const getAudio = async () => {
-    if (sound) {
-      console.log(sound);
+    if (sound && sound.unloadAsync) {
       await sound.unloadAsync();
     }
     try {
@@ -67,8 +67,8 @@ const PlayerWidget = ({isShown}:{isShown: boolean}) => {
               { shouldPlay: true },
               onPlaybackStatusUpdate
             );
-            setSound(sound);
-            // useStore.setState({sound: sound})
+            // setSound(sound);
+            useStore.setState({sound: sound})
             await sound.playAsync();
             // setIsPlaying(true);
             useStore.setState({isPlaying: true})

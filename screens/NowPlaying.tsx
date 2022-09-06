@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useStore } from '../store';
 
 import { AntDesign } from '@expo/vector-icons';
+import ProgressBar from '../components/ProgressBar';
 
 const NowPlaying = () => {
   const playlist = useStore((state) => state.playlist);
@@ -25,6 +26,9 @@ const NowPlaying = () => {
         </View>
           <AntDesign name="hearto" size={20} color="white" style={{ marginRight: 30 }} />
        
+      </View>
+      <View>
+        <ProgressBar procent={0.2} />
       </View>
       <View>
 
