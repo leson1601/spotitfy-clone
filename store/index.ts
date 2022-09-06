@@ -5,6 +5,7 @@ import {  ISong } from '../types/index';
 
 interface State {
   playlist: ISong[] | null;
+  isPlaying: boolean;
 }
 
 export const useStore = create<State>()(
@@ -12,6 +13,7 @@ export const useStore = create<State>()(
     persist(
       (set) => ({
         playlist: null,
+        isPlaying: false,
       }),
       {
         name: 'spotify-clone-storage',

@@ -7,32 +7,37 @@ import axios from 'axios';
 import { Audio, AVPlaybackStatus } from 'expo-av';
 import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
-import { useNavigation } from '@react-navigation/native';
+import {  useNavigation } from '@react-navigation/native';
 
-const PlayerWidget = () => {
+const PlayerWidget = ({isShown}:{isShown: boolean}) => {
   const navigation = useNavigation();
   const playlist = useStore((state) => state.playlist);
   const song = playlist ? playlist[0] : null;
   const [progressProcent, setPorgressProcent] = useState<number>(0);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  // const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const isPlaying = useStore((state) => state.isPlaying);
   const [sound, setSound] = useState<Audio.Sound>();
+  // const sound = useStore((state) => state.sound);
   useEffect(() => {
     setPorgressProcent(0);
     getAudio();
   }, [song]);
   
-  useEffect(() => {
-    return sound
-      ? () => {
-        console.log('Unloading Sound');
-        sound.unloadAsync();
-      }
-      : undefined;
-  }, [sound]);
+
+
+  // useEffect(() => {
+  //   return sound
+  //     ? () => {
+  //       console.log('Unloading Sound');
+  //       sound.unloadAsync();
+  //     }
+  //     : undefined;
+  // }, [sound]);
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     if ('isPlaying' in status) {
-      setIsPlaying(status.isPlaying);
+      // setIsPlaying(status.isPlaying);
+      useStore.setState({isPlaying: status.isPlaying})
     }
     if (("positionMillis" in status) && ('durationMillis' in status)) {
       if (status.durationMillis) {
@@ -56,7 +61,6 @@ const PlayerWidget = () => {
 
           if (response.data.data && response.data.data[128]) {
             const audioURI = response.data.data[128];
-            console.log(audioURI);
 
             const { sound } = await Audio.Sound.createAsync(
               { uri: audioURI },
@@ -64,8 +68,11 @@ const PlayerWidget = () => {
               onPlaybackStatusUpdate
             );
             setSound(sound);
+            // useStore.setState({sound: sound})
             await sound.playAsync();
-            setIsPlaying(true);
+            // setIsPlaying(true);
+            useStore.setState({isPlaying: true})
+
           } else {
             const toast = Toast.show(response.data.msg, {
               duration: Toast.durations.SHORT,
@@ -87,17 +94,28 @@ const PlayerWidget = () => {
   const onPlayPausePress = async () => {
     if (sound) {
       if (isPlaying) {
-        await sound.pauseAsync();
-        setIsPlaying(false);
+        pause();
       } else {
-        await sound.playAsync();
-        setIsPlaying(true);
+        play();
       }
     }
   };
 
+  const play = async () => {
+    await sound?.playAsync();
+    // setIsPlaying(true);
+    useStore.setState({ isPlaying: true })
+
+  };
+  const pause = async () => {
+    await sound?.pauseAsync();
+    // setIsPlaying(false);
+    useStore.setState({ isPlaying: false })
+
+  };
+
   return (
-    <Pressable style={song ? styles.container : { display: 'none' }} onPress={onContainerPress}>
+    <Pressable style={[{ display: isShown ? "flex" : "none" },song ? styles.container : { display: 'none' }]} onPress={onContainerPress}>
       <View style={styles.topContainer}>
         <Image source={{ uri: song?.thumbnail }} style={styles.cover} />
         <View>

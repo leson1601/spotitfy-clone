@@ -6,10 +6,10 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName, Text, View } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -24,12 +24,23 @@ import NowPlaying from '../screens/NowPlaying';
 import PlayerWidget from '../components/PlayerWidget';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName; }) {
+  const navigationRef = useNavigationContainerRef();
+  const [currentRoute, setCurrentRoute] = React.useState<string | undefined>("");
+
   return (
     <NavigationContainer
+      ref={navigationRef}
+      onStateChange={
+        () => {
+          if (navigationRef.isReady()) {
+            setCurrentRoute(navigationRef.getCurrentRoute()?.name);
+          }
+        }
+      }
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>     
       <RootNavigator />
-      <PlayerWidget />
+      <PlayerWidget isShown={currentRoute === "NowPlaying" ? false : true} />
     </NavigationContainer>
   );
 }
