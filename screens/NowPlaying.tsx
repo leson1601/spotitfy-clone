@@ -1,12 +1,12 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
-import { useStore } from '../store';
+import { useSoundStore } from '../store';
 
 import { AntDesign } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
 
 const NowPlaying = () => {
-  const playlist = useStore((state) => state.playlist);
+  const playlist = useSoundStore((state) => state.playlist);
 
   const song = playlist ? playlist[0] : null;
 
@@ -28,7 +28,7 @@ const NowPlaying = () => {
        
       </View>
       <View>
-        <ProgressBar procent={0.2} />
+        <ProgressBar  disabled={false} />
       </View>
       <View>
 

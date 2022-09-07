@@ -1,21 +1,25 @@
-import { Audio } from 'expo-av';
+import { Audio, AVPlaybackStatusError, AVPlaybackStatusSuccess } from 'expo-av';
 import create from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { ISong } from '../types/index';
 
-interface State {
+interface SoundState {
   playlist: ISong[] | null;
   isPlaying: boolean;
   sound: Audio.Sound | null;
+  position: number;
+  duration: number;
 }
 
-export const useStore = create<State>()(
+export const useSoundStore = create<SoundState>()(
   devtools(
     persist(
       (set) => ({
         playlist: null,
         isPlaying: false,
-        sound: null
+        sound: null,
+        position: 0,
+        duration: 0
       }),
       {
         name: 'spotify-clone-storage',

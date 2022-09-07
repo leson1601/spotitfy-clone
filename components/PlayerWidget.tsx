@@ -1,51 +1,26 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useStore } from '../store';
+import { useSoundStore } from '../store';
 import { FontAwesome } from '@expo/vector-icons';
 import { BASE_URL } from "@env";
 import axios from 'axios';
-import { Audio, AVPlaybackStatus } from 'expo-av';
+import { Audio } from 'expo-av';
 import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
-import {  useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { onPlaybackStatusUpdate } from '../utils/audioController';
 
-const PlayerWidget = ({isShown}:{isShown: boolean}) => {
+const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const navigation = useNavigation();
-  const playlist = useStore((state) => state.playlist);
+  const playlist = useSoundStore((state) => state.playlist);
   const song = playlist ? playlist[0] : null;
-  const [progressProcent, setPorgressProcent] = useState<number>(0);
-  // const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const isPlaying = useStore((state) => state.isPlaying);
-  // const [sound, setSound] = useState<Audio.Sound>();
-  const sound = useStore((state) => state.sound);
-  console.log(sound?.unloadAsync)
+  const isPlaying = useSoundStore((state) => state.isPlaying);
+  const sound = useSoundStore((state) => state.sound);
+
   useEffect(() => {
-    setPorgressProcent(0);
+    useSoundStore.setState({ duration: 0, position: 0 });
     getAudio();
   }, [song]);
-  
-
-
-  // useEffect(() => {
-  //   return sound
-  //     ? () => {
-  //       console.log('Unloading Sound');
-  //       sound.unloadAsync();
-  //     }
-  //     : undefined;
-  // }, [sound]);
-
-  const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
-    if ('isPlaying' in status) {
-      // setIsPlaying(status.isPlaying);
-      useStore.setState({isPlaying: status.isPlaying})
-    }
-    if (("positionMillis" in status) && ('durationMillis' in status)) {
-      if (status.durationMillis) {
-        setPorgressProcent(status.positionMillis / status.durationMillis);
-      }
-    }
-  };
 
   const getAudio = async () => {
     if (sound && sound.unloadAsync) {
@@ -62,16 +37,16 @@ const PlayerWidget = ({isShown}:{isShown: boolean}) => {
           if (response.data.data && response.data.data[128]) {
             const audioURI = response.data.data[128];
 
-            const { sound } = await Audio.Sound.createAsync(
+            const { sound, status } = await Audio.Sound.createAsync(
               { uri: audioURI },
-              { shouldPlay: true },
+              {
+                progressUpdateIntervalMillis: 10,
+                shouldPlay: true
+              },
               onPlaybackStatusUpdate
             );
-            // setSound(sound);
-            useStore.setState({sound: sound})
+            useSoundStore.setState({ sound: sound });
             await sound.playAsync();
-            // setIsPlaying(true);
-            useStore.setState({isPlaying: true})
 
           } else {
             const toast = Toast.show(response.data.msg, {
@@ -103,19 +78,17 @@ const PlayerWidget = ({isShown}:{isShown: boolean}) => {
 
   const play = async () => {
     await sound?.playAsync();
-    // setIsPlaying(true);
-    useStore.setState({ isPlaying: true })
+    useSoundStore.setState({ isPlaying: true });
 
   };
   const pause = async () => {
     await sound?.pauseAsync();
-    // setIsPlaying(false);
-    useStore.setState({ isPlaying: false })
+    useSoundStore.setState({ isPlaying: false });
 
   };
 
   return (
-    <Pressable style={[{ display: isShown ? "flex" : "none" },song ? styles.container : { display: 'none' }]} onPress={onContainerPress}>
+    <Pressable style={[{ display: isShown ? "flex" : "none" }, song ? styles.container : { display: 'none' }]} onPress={onContainerPress}>
       <View style={styles.topContainer}>
         <Image source={{ uri: song?.thumbnail }} style={styles.cover} />
         <View>
@@ -128,7 +101,7 @@ const PlayerWidget = ({isShown}:{isShown: boolean}) => {
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
         </Pressable>
       </View>
-      <ProgressBar procent={progressProcent} />
+      <ProgressBar disabled={true} />
 
     </Pressable>
   );

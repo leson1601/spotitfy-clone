@@ -8,7 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Song from '../components/Song';
-import { useStore } from '../store';
+import { useSoundStore } from '../store';
 const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) => {
   const [album, setAlbum] = useState<IAlbumDetail | null>();
   const [pos, setPos] = React.useState(0);
@@ -40,7 +40,7 @@ const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) =
   const onPlayPausePress = () => {
     console.log("Press");
     if (album) {
-      useStore.setState({ playlist: album.song.items });
+      useSoundStore.setState({ playlist: album.song.items });
     }
   };
   return (

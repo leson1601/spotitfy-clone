@@ -2,7 +2,7 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { ISong } from '../types/index';
 import { Entypo } from '@expo/vector-icons';
-import { useStore } from '../store';
+import { useSoundStore } from '../store';
 
 const Song = ({ song, playlist }: { song: ISong, playlist: ISong[]}) => {
   
@@ -11,7 +11,7 @@ const Song = ({ song, playlist }: { song: ISong, playlist: ISong[]}) => {
     const tailPlaylist = playlist.slice(0, index)
     const headPlaylist = playlist.slice(index)
     const newPlaylist = headPlaylist.concat(tailPlaylist)    
-    useStore.setState({ playlist: newPlaylist});
+    useSoundStore.setState({ playlist: newPlaylist});
   };
   return (
     <Pressable style={styles.container} onPress={handleOnPress} >
