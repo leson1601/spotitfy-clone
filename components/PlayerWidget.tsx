@@ -9,13 +9,19 @@ import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
 import { useNavigation } from '@react-navigation/native';
 import { onPlaybackStatusUpdate } from '../utils/audioController';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../redux-store/store';
 
 const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch()
   const playlist = useSoundStore((state) => state.playlist);
   const song = playlist ? playlist[0] : null;
   const isPlaying = useSoundStore((state) => state.isPlaying);
   const sound = useSoundStore((state) => state.sound);
+
+  const isPlaying2 = useSelector((state: RootState) => state.audio.isPlaying)
+  console.log("redux",isPlaying2)
 
   useEffect(() => {
     useSoundStore.setState({ duration: 0, position: 0 });
@@ -69,19 +75,19 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const onPlayPausePress = async () => {
     if (sound) {
       if (isPlaying) {
-        pause();
+        pauseAudio();
       } else {
-        play();
+        playAudio();
       }
     }
   };
 
-  const play = async () => {
+  const playAudio = async () => {
     await sound?.playAsync();
     useSoundStore.setState({ isPlaying: true });
 
   };
-  const pause = async () => {
+  const pauseAudio = async () => {
     await sound?.pauseAsync();
     useSoundStore.setState({ isPlaying: false });
 
