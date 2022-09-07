@@ -89,8 +89,8 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   };
 
   return (
-    <Pressable style={[{ display: isShown ? "flex" : "none" }, song ? styles.container : { display: 'none' }]} onPress={onContainerPress}>
-      <View style={styles.topContainer}>
+    <View style={[{ display: isShown ? "flex" : "none" }, song ? styles.container : { display: 'none' }]} >
+      <Pressable style={styles.topContainer} onPress={onContainerPress}>
         <Image source={{ uri: song?.thumbnail }} style={styles.cover} />
         <View>
           <Text style={styles.title} numberOfLines={1}>{song?.title}</Text>
@@ -101,10 +101,10 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
         <Pressable style={styles.playButton} onPress={onPlayPausePress}>
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
         </Pressable>
-      </View>
+      </Pressable>
       <ProgressBar disabled={true} />
 
-    </Pressable>
+    </View>
   );
 };
 export default PlayerWidget;

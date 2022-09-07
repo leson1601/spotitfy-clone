@@ -4,8 +4,6 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import { Provider } from 'react-redux';
-import { store } from './redux-store/store';
 
 
 
@@ -18,15 +16,15 @@ export default function App() {
     return null;
   } else {
     return (
-      <Provider store={store}>
+
       <RootSiblingParent>
         <SafeAreaProvider>
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar />
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
 
         </SafeAreaProvider>
       </RootSiblingParent>
-      </Provider>
+
     );
   }
 }
