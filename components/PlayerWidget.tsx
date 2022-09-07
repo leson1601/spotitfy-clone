@@ -17,6 +17,7 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const isPlaying = useSoundStore((state) => state.isPlaying);
   const sound = useSoundStore((state) => state.sound);
 
+
   useEffect(() => {
     useSoundStore.setState({ duration: 0, position: 0 });
     getAudio();
@@ -69,27 +70,27 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const onPlayPausePress = async () => {
     if (sound) {
       if (isPlaying) {
-        pause();
+        pauseAudio();
       } else {
-        play();
+        playAudio();
       }
     }
   };
 
-  const play = async () => {
+  const playAudio = async () => {
     await sound?.playAsync();
     useSoundStore.setState({ isPlaying: true });
 
   };
-  const pause = async () => {
+  const pauseAudio = async () => {
     await sound?.pauseAsync();
     useSoundStore.setState({ isPlaying: false });
 
   };
 
   return (
-    <Pressable style={[{ display: isShown ? "flex" : "none" }, song ? styles.container : { display: 'none' }]} onPress={onContainerPress}>
-      <View style={styles.topContainer}>
+    <View style={[{ display: isShown ? "flex" : "none" }, song ? styles.container : { display: 'none' }]} >
+      <Pressable style={styles.topContainer} onPress={onContainerPress}>
         <Image source={{ uri: song?.thumbnail }} style={styles.cover} />
         <View>
           <Text style={styles.title} numberOfLines={1}>{song?.title}</Text>
@@ -100,10 +101,10 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
         <Pressable style={styles.playButton} onPress={onPlayPausePress}>
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
         </Pressable>
-      </View>
+      </Pressable>
       <ProgressBar disabled={true} />
 
-    </Pressable>
+    </View>
   );
 };
 export default PlayerWidget;

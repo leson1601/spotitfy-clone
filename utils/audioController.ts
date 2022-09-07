@@ -3,6 +3,7 @@ import { useSoundStore } from '../store';
 
 
 const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
+  // const song = playlist ? playlist[0] : null;
   if ('isPlaying' in status) {
     useSoundStore.setState({ isPlaying: status.isPlaying });
   }
@@ -12,6 +13,9 @@ const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
       useSoundStore.setState({ position: status.positionMillis, duration: status.durationMillis });
     }
   }
+  if ("didJustFinish" in status && status.didJustFinish) {
+    console.log("finish")
+  }
 };
 
 const progressBarPosition = () => {
@@ -20,6 +24,7 @@ const progressBarPosition = () => {
   if (duration) return (position / duration) * 100;
   else return 0;
 };
+
 
 
 

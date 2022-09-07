@@ -16,13 +16,15 @@ export default function App() {
     return null;
   } else {
     return (
+
       <RootSiblingParent>
         <SafeAreaProvider>
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar />
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
 
         </SafeAreaProvider>
       </RootSiblingParent>
+
     );
   }
 }
