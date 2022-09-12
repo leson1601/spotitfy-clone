@@ -4,11 +4,10 @@ import { useSoundStore } from '../store';
 import { FontAwesome } from '@expo/vector-icons';
 import { BASE_URL } from "@env";
 import axios from 'axios';
-import { Audio } from 'expo-av';
+import { Audio, AVPlaybackStatus } from 'expo-av';
 import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
 import { useNavigation } from '@react-navigation/native';
-import { onPlaybackStatusUpdate } from '../utils/audioController';
 
 const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const navigation = useNavigation();
@@ -22,6 +21,21 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
     useSoundStore.setState({ duration: 0, position: 0 });
     getAudio();
   }, [song]);
+  const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
+    // const song = playlist ? playlist[0] : null;
+    if ('isPlaying' in status) {
+      useSoundStore.setState({ isPlaying: status.isPlaying });
+    }
+
+    if (("positionMillis" in status) && ('durationMillis' in status)) {
+      if (status.durationMillis) {
+        useSoundStore.setState({ position: status.positionMillis, duration: status.durationMillis });
+      }
+    }
+    if ("didJustFinish" in status && status.didJustFinish) {
+      console.log("finish");
+    }
+  };
 
   const getAudio = async () => {
     if (sound && sound.unloadAsync) {

@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import Slider from '@react-native-community/slider';
 import { useSoundStore } from '../store';
-import { progressBarPosition } from '../utils/audioController';
 
 const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   const sound = useSoundStore((state) => state.sound);
@@ -30,6 +29,13 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
     //   });
     // }
   };
+  const progressBarPosition = () => {
+    const duration = useSoundStore((state) => state.duration);
+    const position = useSoundStore((state) => state.position);
+    if (duration) return (position / duration) * 100;
+    else return 0;
+  };
+
   const handleOnSlidingStart = async () => {
     if (!sound) return;
     else {
