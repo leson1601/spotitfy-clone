@@ -4,7 +4,7 @@ import { devtools, persist } from 'zustand/middleware';
 import { ISong } from '../types/index';
 
 interface SoundState {
-  playlist: ISong[] | null;
+  playlist: ISong[];
   isPlaying: boolean;
   sound: Audio.Sound | null;
   position: number;
@@ -15,7 +15,7 @@ export const useSoundStore = create<SoundState>()(
   devtools(
     persist(
       (set) => ({
-        playlist: null,
+        playlist: [],
         isPlaying: false,
         sound: null,
         position: 0,

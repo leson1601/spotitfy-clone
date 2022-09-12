@@ -8,19 +8,21 @@ import { Audio, AVPlaybackStatus } from 'expo-av';
 import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
 import { useNavigation } from '@react-navigation/native';
+import { ISong } from '../types/index';
 
 const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const navigation = useNavigation();
   const playlist = useSoundStore((state) => state.playlist);
-  const song = playlist ? playlist[0] : null;
+  const song = playlist[0];
   const isPlaying = useSoundStore((state) => state.isPlaying);
   const sound = useSoundStore((state) => state.sound);
 
 
   useEffect(() => {
-    useSoundStore.setState({ duration: 0, position: 0 });
+    console.log(song);
     getAudio();
-  }, [song]);
+  }, [song.encodeId]);
+
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     // const song = playlist ? playlist[0] : null;
     if ('isPlaying' in status) {
@@ -34,12 +36,17 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
     }
     if ("didJustFinish" in status && status.didJustFinish) {
       console.log("finish");
+      nextAudio();
     }
   };
 
   const getAudio = async () => {
+    console.log("getAudio");
+    useSoundStore.setState({ duration: 0, position: 0 });
+
     if (sound && sound.unloadAsync) {
       await sound.unloadAsync();
+      useSoundStore.setState({ sound: null });
     }
     try {
       if (song) {
@@ -99,6 +106,14 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const pauseAudio = async () => {
     await sound?.pauseAsync();
     useSoundStore.setState({ isPlaying: false });
+
+  };
+
+  const nextAudio = () => {
+    const newPlaylistArr = playlist.splice(1).concat(playlist.splice(0,1))
+
+
+    useSoundStore.setState({ playlist: newPlaylistArr });
 
   };
 

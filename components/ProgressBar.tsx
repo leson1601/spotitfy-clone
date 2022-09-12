@@ -7,6 +7,12 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   const sound = useSoundStore((state) => state.sound);
   const duration = useSoundStore((state) => state.duration);
 
+  const progressBarPosition = () => {
+    const duration = useSoundStore((state) => state.duration);
+    const position = useSoundStore((state) => state.position);
+    if (duration) return (position / duration) * 100;
+    else return 0;
+  };
 
 
   const handleOnValueChange = (value: number) => {
@@ -29,13 +35,6 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
     //   });
     // }
   };
-  const progressBarPosition = () => {
-    const duration = useSoundStore((state) => state.duration);
-    const position = useSoundStore((state) => state.position);
-    if (duration) return (position / duration) * 100;
-    else return 0;
-  };
-
   const handleOnSlidingStart = async () => {
     if (!sound) return;
     else {
