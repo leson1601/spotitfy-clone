@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
-import Slider from '@react-native-community/slider';
 import { useSoundStore } from '../store';
+import { Slider } from '@miblanchard/react-native-slider';
 
 const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   const sound = useSoundStore((state) => state.sound);
@@ -15,25 +15,13 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   };
 
 
-  const handleOnValueChange = (value: number) => {
-
-    useSoundStore.setState({ position: value * duration / 100 });
-
-    // if (sound?.getStatusAsync) {
-    //   sound?.getStatusAsync().then(status => {
-    //     if (status && 'durationMillis' in status && status.durationMillis) {
-    //       const newPos = (value * status.durationMillis) / 100;
-    //       sound.setPositionAsync(newPos);
-
-    //       if (!status.isPlaying) {
-    //         sound.setStatusAsync({ shouldPlay: true, positionMillis: newPos });
-    //       } else {
-    //         sound.setPositionAsync(newPos);
-    //       }
-
-    //     }
-    //   });
-    // }
+  const handleOnValueChange = async (value: number) => {
+    // useSoundStore.setState({ position: value * duration / 100 });
+    console.log(value)
+    if (!sound) return;
+    else {      
+      await sound.setPositionAsync(Math.floor(value * duration / 100));     
+    }
   };
   const handleOnSlidingStart = async () => {
     if (!sound) return;
@@ -45,30 +33,29 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   const handleOnSlidingComplete = async (value: number) => {
     if (!sound) return;
     else {
-      await sound.pauseAsync();
       await sound.setPositionAsync(Math.floor(value * duration / 100));
       await sound.playAsync();
 
     }
   };
   return (
-    <View style={styles.container}>
-      {/* <View style={[styles.progress, { width: `${procent * 100}%` }]}></View> */}
+    <Slider
+      containerStyle={styles.container}
+      value={progressBarPosition()}
+      disabled={disabled}
+      minimumValue={0}
+      maximumValue={100}
+      minimumTrackTintColor="#B2B2B2"
+      maximumTrackTintColor="transparent"
+      onValueChange={(value) => handleOnValueChange(value as number)}
+      // onSlidingStart={handleOnSlidingStart}
+      onSlidingComplete={(value) => handleOnSlidingComplete(value as number)}
+      thumbStyle={styles.thumb}
+      // trackClickable={true}
+      thumbTouchSize={{ width: 30, height: 30 }}
+      debugTouchArea
+    />
 
-      <Slider
-        style={{ width: "100%", height: 40 }}
-        disabled={disabled}
-        value={progressBarPosition()}
-        tapToSeek={true}
-        minimumValue={0}
-        maximumValue={100}
-        minimumTrackTintColor="#B2B2B2"
-        maximumTrackTintColor="transparent"
-        onValueChange={(value) => handleOnValueChange(value)}
-        onSlidingStart={handleOnSlidingStart}
-        onSlidingComplete={(value) => handleOnSlidingComplete(value)}
-      />
-    </View>
   );
 };
 
@@ -76,14 +63,14 @@ export default ProgressBar;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: 3,
-    borderRadius: 4,
-    backgroundColor: 'transparent',
+    width: "100%",
+    height: 4,
+
   },
-  progress: {
-    backgroundColor: '#B2B2B2',
-    height: '100%',
-    borderRadius: 4,
+  thumb: {
+    width: 13,
+    height: 13,
+    color: "white",
+    backgroundColor: "white",
   }
 });

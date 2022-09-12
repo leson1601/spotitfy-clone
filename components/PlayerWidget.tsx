@@ -8,7 +8,7 @@ import { Audio, AVPlaybackStatus } from 'expo-av';
 import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
 import { useNavigation } from '@react-navigation/native';
-import { ISong } from '../types/index';
+
 
 const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const navigation = useNavigation();
@@ -19,9 +19,8 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
 
 
   useEffect(() => {
-    console.log(song);
     getAudio();
-  }, [song.encodeId]);
+  }, [song]);
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     // const song = playlist ? playlist[0] : null;
@@ -110,7 +109,7 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   };
 
   const nextAudio = () => {
-    const newPlaylistArr = playlist.splice(1).concat(playlist.splice(0,1))
+    const newPlaylistArr = playlist.splice(1).concat(playlist.splice(0, 1));
 
 
     useSoundStore.setState({ playlist: newPlaylistArr });
@@ -131,7 +130,9 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
         </Pressable>
       </Pressable>
-      <ProgressBar disabled={true} />
+      <View>
+        <ProgressBar disabled={true} />
+      </View>
 
     </View>
   );
