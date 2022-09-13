@@ -94,6 +94,8 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
       } else {
         playAudio();
       }
+    } else {
+      getAudio()
     }
   };
 

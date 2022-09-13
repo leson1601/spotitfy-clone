@@ -4,7 +4,7 @@ import { useSoundStore } from '../store';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
-import { millisToMinutesAndSeconds, msToTime } from '../utils';
+import { millisToMinutesAndSeconds } from '../utils';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ import { FontAwesome } from '@expo/vector-icons';
 const NowPlaying = () => {
   const playlist = useSoundStore((state) => state.playlist);
   const isPlaying = useSoundStore((state) => state.isPlaying);
-
+  
   const duration = useSoundStore((state) => state.duration);
   const position = useSoundStore((state) => state.position);
   const song = playlist ? playlist[0] : null;
