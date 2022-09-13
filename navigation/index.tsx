@@ -40,6 +40,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>     
       <RootNavigator />
+     
       <PlayerWidget isShown={currentRoute === "NowPlaying" ? false : true} />
     </NavigationContainer>
   );

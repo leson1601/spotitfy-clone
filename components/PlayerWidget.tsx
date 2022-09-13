@@ -75,7 +75,8 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
           } else {
             const toast = Toast.show(response.data.msg, {
               duration: Toast.durations.SHORT,
-              position: 0,
+              position: -56,
+              hideOnPress: true
             });
           }
           Toast.hide(loadingToast);

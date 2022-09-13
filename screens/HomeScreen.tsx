@@ -8,8 +8,11 @@ import Playlist from '../components/Playlist';
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { useSoundStore } from '../store';
 
 export default function HomeScreen() {
+  const sound = useSoundStore((state) => state.sound);
+
   const greetMessage = (): string => {
     const now = new Date().getHours();
     if (now >= 6 && now <= 12) return "Good Morning";
@@ -31,7 +34,7 @@ export default function HomeScreen() {
     }
   }, []);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: sound ?100: 50}]}>
       <View style={styles.header}>
         <Text style={styles.title}>{greetMessage()}</Text>
         <View style={styles.headerRight}>
@@ -59,7 +62,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 10,
-    paddingBottom: 100,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
