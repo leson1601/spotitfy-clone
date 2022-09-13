@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { useSoundStore } from '../store';
 import { Entypo } from '@expo/vector-icons';
@@ -16,7 +16,28 @@ const NowPlaying = () => {
   const duration = useSoundStore((state) => state.duration);
   const position = useSoundStore((state) => state.position);
   const song = playlist ? playlist[0] : null;
+  const sound = useSoundStore((state) => state.sound);
 
+  const onPlayPausePress = async () => {
+    if (sound) {
+      if (isPlaying) {
+        pauseAudio();
+      } else {
+        playAudio();
+      }
+    }
+  };
+
+  const playAudio = async () => {
+    await sound?.playAsync();
+    useSoundStore.setState({ isPlaying: true });
+
+  };
+  const pauseAudio = async () => {
+    await sound?.pauseAsync();
+    useSoundStore.setState({ isPlaying: false });
+
+  };
   return (
     <View style={styles.container}>
       <View style={{ alignItems: "center" }}>
@@ -51,9 +72,9 @@ const NowPlaying = () => {
         <View>
           <Entypo name="controller-jump-to-start" size={24} color="white" />
         </View>
-        <View>
+        <Pressable onPress={onPlayPausePress}>
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={30} color="white" />
-        </View>
+        </Pressable>
         <View>
           <Entypo name="controller-next" size={24} color="white" />
         </View>

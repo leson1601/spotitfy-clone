@@ -10,14 +10,14 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   const progressBarPosition = () => {
     const duration = useSoundStore((state) => state.duration);
     const position = useSoundStore((state) => state.position);
-    if (duration) return (position / duration) * 100;
+    if (duration) return (position / duration) ;
     else return 0;
   };
 
 
   const handleOnValueChange = (value: number) => {
 
-    useSoundStore.setState({ position: value * duration / 100 });
+    useSoundStore.setState({ position: value * duration  });
 
   };
   const handleOnSlidingStart = async () => {
@@ -31,7 +31,7 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
     if (!sound) return;
     else {
       // await sound.setPositionAsync(Math.floor(value * duration / 100));
-      await sound.setPositionAsync(value * duration / 100);
+      await sound.setPositionAsync(value * duration );
       await sound.playAsync();
 
     }
@@ -43,8 +43,7 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
         // disabled={disabled}
         value={progressBarPosition()}
         tapToSeek={true}
-        minimumValue={0}
-        maximumValue={100}
+      
         minimumTrackTintColor="#B2B2B2"
         maximumTrackTintColor="transparent"
         onValueChange={(value) => handleOnValueChange(value)}
