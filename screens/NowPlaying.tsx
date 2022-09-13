@@ -8,11 +8,12 @@ import { millisToMinutesAndSeconds } from '../utils';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import Toast from 'react-native-root-toast';
 
 const NowPlaying = () => {
   const playlist = useSoundStore((state) => state.playlist);
   const isPlaying = useSoundStore((state) => state.isPlaying);
-
+  const isBuffering = useSoundStore((state) => state.isBuffering);
   const duration = useSoundStore((state) => state.duration);
   const position = useSoundStore((state) => state.position);
   const song = playlist ? playlist[0] : null;
@@ -72,6 +73,10 @@ const NowPlaying = () => {
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={styles.time}>{millisToMinutesAndSeconds(position)}</Text>
+          <Toast
+            visible={isBuffering}
+            position={0}
+          >Buffering...</Toast>
           <Text style={styles.time}>{millisToMinutesAndSeconds(duration)}</Text>
         </View>
       </View>
@@ -104,6 +109,7 @@ export default NowPlaying;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
+    backgroundColor:"green"
   },
   cover: {
     width: "100%",

@@ -9,6 +9,7 @@ interface SoundState {
   sound: Audio.Sound | null;
   position: number;
   duration: number;
+  isBuffering: boolean;
 }
 
 export const useSoundStore = create<SoundState>()(
@@ -19,7 +20,8 @@ export const useSoundStore = create<SoundState>()(
         isPlaying: false,
         sound: null,
         position: 0,
-        duration: 0
+        duration: 0,
+        isBuffering: false
       }),
       {
         name: 'spotify-clone-storage',

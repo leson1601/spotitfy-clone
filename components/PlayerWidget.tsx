@@ -27,6 +27,9 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
     if ('isPlaying' in status) {
       useSoundStore.setState({ isPlaying: status.isPlaying });
     }
+    if ('isBuffering' in status) {
+      useSoundStore.setState({ isBuffering: status.isBuffering });
+    }
 
     if (("positionMillis" in status) && ('durationMillis' in status)) {
       if (status.durationMillis) {
@@ -95,7 +98,7 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
         playAudio();
       }
     } else {
-      getAudio()
+      getAudio();
     }
   };
 
@@ -124,6 +127,7 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
             <Text style={styles.artist} numberOfLines={1}>{song?.artistsNames}</Text>
           </View>
         </View>
+       
         <Pressable style={styles.playButton} onPress={onPlayPausePress}>
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
         </Pressable>
