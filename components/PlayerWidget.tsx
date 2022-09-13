@@ -2,14 +2,13 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useSoundStore } from '../store';
 import { FontAwesome } from '@expo/vector-icons';
-import Toast from 'react-native-root-toast';
-import axios from 'axios';
 import { BASE_URL } from "@env";
+import axios from 'axios';
 import { Audio, AVPlaybackStatus } from 'expo-av';
-
+import Toast from 'react-native-root-toast';
 import ProgressBar from './ProgressBar';
 import { useNavigation } from '@react-navigation/native';
-import { audioController } from '../utils/audioController';
+import { ISong } from '../types/index';
 
 const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const navigation = useNavigation();
@@ -22,8 +21,6 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   useEffect(() => {
     getAudio();
   }, [song]);
-
- 
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     // const song = playlist ? playlist[0] : null;
@@ -38,7 +35,7 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
     }
     if ("didJustFinish" in status && status.didJustFinish) {
       console.log("finish");
-      audioController().nextAudio();
+      nextAudio();
     }
   };
 
@@ -67,7 +64,7 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
                 progressUpdateIntervalMillis: 10,
                 shouldPlay: true
               },
-             onPlaybackStatusUpdate
+              onPlaybackStatusUpdate
             );
             useSoundStore.setState({ sound: sound });
             await sound.playAsync();
@@ -90,6 +87,34 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const onContainerPress = () => {
     navigation.navigate("NowPlaying");
   };
+  const onPlayPausePress = async () => {
+    if (sound) {
+      if (isPlaying) {
+        pauseAudio();
+      } else {
+        playAudio();
+      }
+    }
+  };
+
+  const playAudio = async () => {
+    await sound?.playAsync();
+    useSoundStore.setState({ isPlaying: true });
+
+  };
+  const pauseAudio = async () => {
+    await sound?.pauseAsync();
+    useSoundStore.setState({ isPlaying: false });
+
+  };
+
+  const nextAudio = () => {
+    const newPlaylistArr = playlist.splice(1).concat(playlist.splice(0, 1));
+
+
+    useSoundStore.setState({ playlist: newPlaylistArr });
+
+  };
 
   return (
     <View style={[{ display: isShown ? "flex" : "none" }, song ? styles.container : { display: 'none' }]} >
@@ -101,7 +126,7 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
             <Text style={styles.artist} numberOfLines={1}>{song?.artistsNames}</Text>
           </View>
         </View>
-        <Pressable style={styles.playButton} onPress={audioController().onPlayPausePress}>
+        <Pressable style={styles.playButton} onPress={onPlayPausePress}>
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={24} color="white" />
         </Pressable>
       </Pressable>

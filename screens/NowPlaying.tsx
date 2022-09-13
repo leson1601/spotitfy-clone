@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { useSoundStore } from '../store';
 import { Entypo } from '@expo/vector-icons';
@@ -9,7 +9,6 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
-import { audioController } from '../utils/audioController';
 
 const NowPlaying = () => {
   const playlist = useSoundStore((state) => state.playlist);
@@ -53,9 +52,9 @@ const NowPlaying = () => {
         <View>
           <Entypo name="controller-jump-to-start" size={24} color="white" />
         </View>
-        <Pressable onPress={audioController().onPlayPausePress}>
+        <View>
           <FontAwesome name={isPlaying ? 'pause' : "play"} size={30} color="white" />
-        </Pressable>
+        </View>
         <View>
           <Entypo name="controller-next" size={24} color="white" />
         </View>
