@@ -52,12 +52,10 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
     }
   };
   return (
-    <View style={styles.container}>
-      {/* <View style={[styles.progress, { width: `${procent * 100}%` }]}></View> */}
 
       <Slider
-        style={{ width: "100%", height: 40 }}
-        disabled={disabled}
+        style={styles.container}
+        // disabled={disabled}
         value={progressBarPosition()}
         tapToSeek={true}
         minimumValue={0}
@@ -68,7 +66,6 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
         onSlidingStart={handleOnSlidingStart}
         onSlidingComplete={(value) => handleOnSlidingComplete(value)}
       />
-    </View>
   );
 };
 
@@ -77,7 +74,7 @@ export default ProgressBar;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 3,
+    height:30,
     borderRadius: 4,
     backgroundColor: 'transparent',
   },

@@ -19,9 +19,8 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
 
 
   useEffect(() => {
-    console.log(song);
     getAudio();
-  }, [song.encodeId]);
+  }, [song]);
 
   const onPlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     // const song = playlist ? playlist[0] : null;
@@ -110,7 +109,7 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   };
 
   const nextAudio = () => {
-    const newPlaylistArr = playlist.splice(1).concat(playlist.splice(0,1))
+    const newPlaylistArr = playlist.splice(1).concat(playlist.splice(0, 1));
 
 
     useSoundStore.setState({ playlist: newPlaylistArr });
