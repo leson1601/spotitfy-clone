@@ -19,21 +19,6 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
 
     useSoundStore.setState({ position: value * duration / 100 });
 
-    // if (sound?.getStatusAsync) {
-    //   sound?.getStatusAsync().then(status => {
-    //     if (status && 'durationMillis' in status && status.durationMillis) {
-    //       const newPos = (value * status.durationMillis) / 100;
-    //       sound.setPositionAsync(newPos);
-
-    //       if (!status.isPlaying) {
-    //         sound.setStatusAsync({ shouldPlay: true, positionMillis: newPos });
-    //       } else {
-    //         sound.setPositionAsync(newPos);
-    //       }
-
-    //     }
-    //   });
-    // }
   };
   const handleOnSlidingStart = async () => {
     if (!sound) return;
@@ -45,8 +30,8 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   const handleOnSlidingComplete = async (value: number) => {
     if (!sound) return;
     else {
-      await sound.pauseAsync();
-      await sound.setPositionAsync(Math.floor(value * duration / 100));
+      // await sound.setPositionAsync(Math.floor(value * duration / 100));
+      await sound.setPositionAsync(value * duration / 100);
       await sound.playAsync();
 
     }
@@ -54,7 +39,7 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   return (
 
       <Slider
-        style={styles.container}
+        style={[styles.container,{height: disabled ? 0: 40}]}
         // disabled={disabled}
         value={progressBarPosition()}
         tapToSeek={true}
@@ -74,7 +59,7 @@ export default ProgressBar;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height:30,
+    marginHorizontal: -15,
     borderRadius: 4,
     backgroundColor: 'transparent',
   },

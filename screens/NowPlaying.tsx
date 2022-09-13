@@ -4,11 +4,10 @@ import { useSoundStore } from '../store';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import ProgressBar from '../components/ProgressBar';
-import { millisToMinutesAndSeconds } from '../utils';
+import { millisToMinutesAndSeconds, msToTime } from '../utils';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import Slider from '@react-native-community/slider';
 
 const NowPlaying = () => {
   const playlist = useSoundStore((state) => state.playlist);
@@ -63,6 +62,7 @@ const NowPlaying = () => {
         </View>
       </View>
       <View>
+       
       </View>
     </View>
   );
