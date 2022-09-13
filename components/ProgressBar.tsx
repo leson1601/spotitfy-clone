@@ -10,14 +10,15 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
   const progressBarPosition = () => {
     const duration = useSoundStore((state) => state.duration);
     const position = useSoundStore((state) => state.position);
-    if (duration) return (position / duration) ;
+    if (duration) return (position / duration);
     else return 0;
   };
 
 
   const handleOnValueChange = (value: number) => {
-
-    useSoundStore.setState({ position: value * duration  });
+    if (sound) {
+      useSoundStore.setState({ position: value * duration });
+    }
 
   };
   const handleOnSlidingStart = async () => {
@@ -27,29 +28,28 @@ const ProgressBar = ({ disabled }: { disabled: boolean; }) => {
     }
   };
 
-  const handleOnSlidingComplete = async (value: number) => {
-    if (!sound) return;
-    else {
+  const handleOnSlidingComplete = async (value: number) => {    
+    if(sound) {
       // await sound.setPositionAsync(Math.floor(value * duration / 100));
-      await sound.setPositionAsync(value * duration );
+      await sound.setPositionAsync(value * duration);
       await sound.playAsync();
 
     }
   };
   return (
 
-      <Slider
-        style={[styles.container,{height: disabled ? 0: 40}]}
-        // disabled={disabled}
-        value={progressBarPosition()}
-        tapToSeek={true}
-      
-        minimumTrackTintColor="#B2B2B2"
-        maximumTrackTintColor="transparent"
-        onValueChange={(value) => handleOnValueChange(value)}
-        onSlidingStart={handleOnSlidingStart}
-        onSlidingComplete={(value) => handleOnSlidingComplete(value)}
-      />
+    <Slider
+      style={[styles.container, { height: disabled ? 0 : 40 }]}
+      // disabled={disabled}
+      value={progressBarPosition()}
+      tapToSeek={true}
+
+      minimumTrackTintColor="#B2B2B2"
+      maximumTrackTintColor="transparent"
+      onValueChange={(value) => handleOnValueChange(value)}
+      onSlidingStart={handleOnSlidingStart}
+      onSlidingComplete={(value) => handleOnSlidingComplete(value)}
+    />
   );
 };
 

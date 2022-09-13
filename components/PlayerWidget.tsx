@@ -107,15 +107,11 @@ const PlayerWidget = ({ isShown }: { isShown: boolean; }) => {
   const pauseAudio = async () => {
     await sound?.pauseAsync();
     useSoundStore.setState({ isPlaying: false });
-
   };
 
   const nextAudio = () => {
-    const newPlaylistArr = playlist.splice(1).concat(playlist.splice(0, 1));
-
-
+    const newPlaylistArr = playlist.slice(1).concat(playlist.slice(0, 1));
     useSoundStore.setState({ playlist: newPlaylistArr });
-
   };
 
   return (

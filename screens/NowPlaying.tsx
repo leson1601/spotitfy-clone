@@ -12,7 +12,7 @@ import { FontAwesome } from '@expo/vector-icons';
 const NowPlaying = () => {
   const playlist = useSoundStore((state) => state.playlist);
   const isPlaying = useSoundStore((state) => state.isPlaying);
-  
+
   const duration = useSoundStore((state) => state.duration);
   const position = useSoundStore((state) => state.position);
   const song = playlist ? playlist[0] : null;
@@ -38,6 +38,16 @@ const NowPlaying = () => {
     useSoundStore.setState({ isPlaying: false });
 
   };
+
+  const prevAudio = async () => {   
+    const newPlaylistArr = playlist.slice(-1).concat(playlist.slice(0,-1));
+    useSoundStore.setState({ playlist: newPlaylistArr });
+  }
+  const nextAudio = () => {
+    const newPlaylistArr = playlist.slice(1).concat(playlist.slice(0, 1));
+    useSoundStore.setState({ playlist: newPlaylistArr });
+  };
+
   return (
     <View style={styles.container}>
       <View style={{ alignItems: "center" }}>
@@ -65,25 +75,25 @@ const NowPlaying = () => {
           <Text style={styles.time}>{millisToMinutesAndSeconds(duration)}</Text>
         </View>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <View>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+        <Pressable>
           <FontAwesome5 name="random" size={24} color="white" />
-        </View>
-        <View>
-          <Entypo name="controller-jump-to-start" size={24} color="white" />
-        </View>
-        <Pressable onPress={onPlayPausePress}>
-          <FontAwesome name={isPlaying ? 'pause' : "play"} size={30} color="white" />
         </Pressable>
-        <View>
+        <Pressable onPress={prevAudio}>
+          <Entypo name="controller-jump-to-start" size={24} color="white" />
+        </Pressable>
+        <Pressable style={styles.play} onPress={onPlayPausePress}>
+          <FontAwesome name={isPlaying ? 'pause' : "play"} size={40} color="white" />
+        </Pressable>
+        <Pressable onPress={nextAudio}>
           <Entypo name="controller-next" size={24} color="white" />
-        </View>
-        <View>
+        </Pressable>
+        <Pressable>
           <Feather name="repeat" size={24} color="white" />
-        </View>
+        </Pressable>
       </View>
       <View>
-       
+
       </View>
     </View>
   );
@@ -116,5 +126,8 @@ const styles = StyleSheet.create({
   },
   time: {
     color: "white"
+  },
+  play: {
+    padding: 10
   }
 });

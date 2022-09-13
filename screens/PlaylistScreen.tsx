@@ -37,8 +37,7 @@ const PlaylistScreen = ({ route, navigation }: RootTabScreenProps<'Playlist'>) =
     }
   },[pos])
 
-  const onPlayPausePress = () => {
-    console.log("Press");
+  const onPlayPausePress = () => {  
     if (album) {
       useSoundStore.setState({ playlist: album.song.items });
     }
